@@ -24,7 +24,6 @@ function interpret(tokens){
 			stack.push([token.var_name, token.var_val]);
 		}
 
-		//expression_tree.js to split apart expressions?
 	}
 }
 

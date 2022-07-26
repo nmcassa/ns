@@ -13,6 +13,6 @@ function compile() {
   const lexed = lex(code);
   const treed = tree(lexed);
   const interpreted = interpret(treed);
-  console.log(treed);
+  console.log(JSON.stringify(treed, null, 2));
 }
 compile();

@@ -1,24 +1,3 @@
-function get_quoted(line) {
-	text = "";
-
-	t = line.split('');
-	i = 0;
-
-	while (i < t.length) {
-		if (t[i] == "\"") {
-			i++;
-			while (t[i] != "\"") {
-				text += t[i];
-				i++;
-			}
-			break;
-		}
-		i++;
-	}
-
-	return text;
-}
-
 function get_subarray(arr, start) {
 	text = "";
 
