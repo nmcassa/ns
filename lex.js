@@ -25,7 +25,7 @@ function lex(code){
 
 		//expressions like name = 9 + 11
 		if (broken[1] == "=") {
-			tokens.push({type: "Expression", var_name: broken[0], expression: get_subarray(broken, 2)});
+			tokens.push({type: "Expression", assignment: broken[0], expression: get_subarray(broken, 2)});
 		}
 
 		//print
@@ -37,7 +37,7 @@ function lex(code){
 		if (broken[0] == "if") {
 			count = broken[1];
 			tokens.push({type: "If", lines: count, statement: 
-						{type: "Expression", expression: get_subarray(broken, 3)}});
+					{type: "Expression", assignment: 'statement', expression: get_subarray(broken, 3)}});
 		}
 	}
 

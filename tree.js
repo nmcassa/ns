@@ -9,24 +9,30 @@ function isOperator(str) {
 	if (str.length != 1 || typeof str != "string") {
 		return false;
 	}
-	operators = ['+', '-', '*', '/'];
+	operators = ['+', '-', '*', '/', '==', '<', '>'];
 	for (let i in operators) {
 		if (operators[i] == str) {
-			return true
+			return true;
 		}
 	}
-	return false
+	return false;
 }
 
 function statement_tree(tokens) {
 	for (let i in tokens) {
 		token = tokens[i];
 
+		if (token.type == "Declare") {
+			if (isNumeric(token.var_val)) {
+				token.var_val = Number(token.var_val);
+			}
+		}
+
 		if (token.type == "If") {
 			token.children = (tokens.splice(Number(i) + 1, token.lines))
 		}
 	}
-	return tokens
+	return tokens;
 }
 
 function get_expression_tree(items) {
@@ -40,11 +46,11 @@ function get_expression_tree(items) {
 			tree.push({type: 'Op', val: item});
 		}
 		else {
-			tree.push({type: 'var', val: item});
+			tree.push({type: 'Var', val: item});
 		}
 	}
 
-	return tree
+	return tree;
 }
 
 function expression_tree(tokens) {
