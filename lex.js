@@ -3,11 +3,10 @@ function get_subarray(arr, start) {
 	let text = "";
 
 	while (start < arr.length) {
-		text += arr[start];
+		text += arr[start] + " ";
 		start++;
 	}
-
-	return text;
+	return text.slice(0, -1);
 }
 
 //make sure that the var name in the declaration is valid

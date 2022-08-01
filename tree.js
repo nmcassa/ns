@@ -77,7 +77,6 @@ function get_expression_tree(items) {
 			tree.push({type: 'Var', val: item});
 		}
 	}
-
 	return tree;
 }
 
@@ -87,12 +86,12 @@ function expression_tree(tokens) {
 		const token = tokens[i];
 
 		if (token.type == "Expression") {
-			items = token.expression.split('');
+			items = token.expression.split(' ');
 			token.expression = get_expression_tree(items);
 		}
 
 		if (token.type == "If") {
-			items = token.statement.expression.split('');
+			items = token.statement.expression.split(' ');
 			token.statement.expression = get_expression_tree(items);
 
 			expression_tree(token.children);
