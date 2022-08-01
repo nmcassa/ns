@@ -1,6 +1,10 @@
 var i = 0
 
-if 2 => i > 5
+for 4 => 2
+i = i + 1
+print i 
+
+if 2 => i < 5
 print "hello"
 i = i + 1
 

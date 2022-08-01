@@ -13,3 +13,13 @@ if 2 => i > 5
 var item = i
 print item
 ```
+
+A for loop takes the number of times it's going to loop and the number of lines under it, it will run that many times:
+
+```
+for 4 => 2
+i = i + 1
+print i
+```
+
+This code runs the two lines underneath it four times.

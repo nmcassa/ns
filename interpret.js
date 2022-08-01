@@ -1,55 +1,63 @@
-stack = [];
+let stack = [];
 
 function find_var(arr, name) {
+	if (typeof name != "string" || arr.length == 0) {
+		throw new Error("No variable found in memory");
+	}
 	for (let i in arr) {
 		if (arr[i][0] == name) {
 			return i;
 		}
 	}
+	throw new Error("No variable found in memory");
 }
 
 function expression_eval(arr) {
 	for (let i in arr) {
 		i = Number(i);
+		let first, second;
 
 		if (arr[i].type == 'Op') {
 			if (arr[i-1].type == 'Var') {
-				arr[i-1].val = Number(stack[find_var(stack, arr[i-1].val)][1]);
-				arr[i-1].type = 'Num';
+				first = Number(stack[find_var(stack, arr[i-1].val)][1]);
+			} else {
+				first = arr[i-1].val;
 			}
 			if (arr[i+1].type == 'Var') {
-				arr[i+1].val = Number(stack[find_var(stack, arr[i+1].val)][1]);
-				arr[i+1].type = 'Num';
+				second = Number(stack[find_var(stack, arr[i+1].val)][1]);
+			} else {
+				second = arr[i+1].val;
 			}
 
 			if (arr[i].val == '+') {
-				return arr[i-1].val + arr[i+1].val;
+				return first + second;
 			}
 			else if (arr[i].val == '-') {
-				return arr[i-1].val - arr[i+1].val;
+				return first - second;
 			}
 			else if (arr[i].val == '*') {
-				return arr[i-1].val * arr[i+1].val;
+				return first * second;
 			}
 			else if (arr[i].val == '/') {
-				return arr[i-1].val / arr[i+1].val;
+				return first / second;
 			}
 			else if (arr[i].val == '<') {
-				return arr[i-1].val < arr[i+1].val;
+				return first < second;
 			}
 			else if (arr[i].val == '>') {
-				return arr[i-1].val > arr[i+1].val;
+				return first > second;
 			}
 			else if (arr[i].val == '==') {
-				return arr[i-1].val == arr[i+1].val;
+				return first == second;
 			}
 		}
 	}
+	throw new Error("Invalid Expression");
 }
 
 function interpret(tokens){
 	for (let i in tokens) {
-		token = tokens[i];
+		const token = tokens[i];
 
 		if (token.type == 'Output') {
 			if (token.output[0] == "\"") {
@@ -64,16 +72,20 @@ function interpret(tokens){
 		}
 
 		if (token.type == 'Expression') {
-			token.expression = expression_eval(token.expression);
-
 			if (token.assignment != 'statement') {
-				stack[find_var(stack, token.assignment)][1] = token.expression;
+				stack[find_var(stack, token.assignment)][1] = expression_eval(token.expression);
 			}
 		}
 
 		if (token.type == 'If') { //check if statement is true!!!!
 			if (expression_eval(token.statement.expression))
 				interpret(token.children);
+		}
+
+		if (token.type == 'For') {
+			for (let i = 0; i < token.times; i++) {
+				interpret(token.children);
+			}
 		}
 	}	
 	return tokens
