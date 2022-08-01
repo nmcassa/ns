@@ -1,3 +1,4 @@
+//returns a subarray as a string when given the array and the start index
 function get_subarray(arr, start) {
 	let text = "";
 
@@ -7,6 +8,27 @@ function get_subarray(arr, start) {
 	}
 
 	return text;
+}
+
+//make sure that the var name in the declaration is valid
+function check_var_name(name) {
+	if(!isNaN(name)) {
+		throw new Error("Invalid Variable Name");
+	}
+	const keywords = ['var', 'for', 'if', 'print'];
+	for (let i in keywords) {
+		if (name == keywords[i]) {
+			throw new Error("Invalid Variable Name");
+		}
+	}
+	const invalid_char = ["\"", "\'", '/', '<', '>', '+', '=', '.', ',', '\n'];
+	for (let i in name) {
+		for (let j in invalid_char) {
+			if (name[i] == invalid_char[j]) {
+				throw new Error("Invalid Variable Name");
+			}
+		}
+	}
 }
 
 function lex(code){
@@ -23,6 +45,7 @@ function lex(code){
 			if (broken.length < 4) {
 				throw new Error("Invalid declaration");
 			}
+			check_var_name(broken[1]);
 			tokens.push({type: "Declare", var_name: broken[1], var_val: get_subarray(broken, 3)});
 		}
 
@@ -55,7 +78,7 @@ function lex(code){
 		}
 
 		if (broken[0] == "for") {
-			if (broken.length < 2 || broken[2] != "=>") {
+			if (broken.length != 4 || broken[2] != "=>") {
 				throw new Error("Invalid for statement");
 			}
 			tokens.push({type: "For", lines: broken[3], times: broken[1]})
