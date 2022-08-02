@@ -21,7 +21,7 @@ int main() {
   string myText;
   string total;
 
-  ifstream MyReadFile("hello.nick");
+  ifstream MyReadFile("../hello.nick");
 
   // Use a while loop together with the getline() function to read the file line by line
   while (getline (MyReadFile, myText)) {
