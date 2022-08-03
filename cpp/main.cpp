@@ -127,8 +127,16 @@ class Variable {
 class Token {
   private:
     string type;
+
+    //for declarations and expressions
     string varName;
     string varValue;
+
+    //for statements
+    //if
+    int lines;
+    //for
+    int repetitions;
 
     vector<Token*> children;
     
@@ -136,6 +144,11 @@ class Token {
     Token(string t, string vN, string vV) {
       type = t;
       varName = vN;
+      varValue = vV;
+    }
+
+    Token(string t, string vV) {
+      type = t;
       varValue = vV;
     }
 
@@ -187,6 +200,16 @@ void lex(vector<string> code) {
       Token newTok("expression", words.at(0), getSubVector(words, 2));
       tokens.push_back(newTok);
     }
+
+    //print
+    if (words.at(0) == "print") {
+      Token newTok("output", getSubVector(words, 1));
+    }
+
+    //if statement
+
+    //for loop
+
   }
 }
 
