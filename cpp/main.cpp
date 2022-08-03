@@ -57,11 +57,21 @@ string getSubVector(vector<string> arr, int start, int end = -1) {
     end = arr.size();
   }
 
-  for (start; start < end; start++) {
+  for (; start < end; start++) {
     ret = ret + arr.at(start);
   }
 
   return ret;
+}
+
+void checkForKeyword(string str) {
+  string keywords[4] = {"var", "for", "if", "print"};
+
+  for (string key : keywords) {
+    if (str == key) {
+      throw std::invalid_argument( "a variable cannot be a keyword" );
+    }
+  }
 }
 
 class Variable {
@@ -191,6 +201,7 @@ void lex(vector<string> code) {
     
     //variable declaration --> var nick = "nick"
     if (words.at(0) == "var") {
+      checkForKeyword(words.at(1));
       Token newTok("declaration", words.at(1), words.at(3));
       tokens.push_back(newTok);
     }
