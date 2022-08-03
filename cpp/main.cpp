@@ -50,6 +50,20 @@ bool searchArrayChar(char (&arr)[N], char target) {
   return false;
 }
 
+string getSubVector(vector<string> arr, int start, int end = -1) {
+  string ret = "";
+
+  if (end == -1) {
+    end = arr.size();
+  }
+
+  for (start; start < end; start++) {
+    ret = ret + arr.at(start);
+  }
+
+  return ret;
+}
+
 class Variable {
   private:
 
@@ -112,64 +126,68 @@ class Variable {
 
 class Token {
   private:
-    Variable tokenVar;
-
-    bool hasChildren;
-    bool isStatement;
-    bool isExpression;
-    bool isDeclaration;
-    bool isOutput;
+    string type;
+    string varName;
+    string varValue;
 
     vector<Token*> children;
-  
+    
   public:
-    Token() {
-      hasChildren = false;
-      isStatement = false;
-      isExpression = false;
-      isDeclaration = false;
-      isOutput = false;
+    Token(string t, string vN, string vV) {
+      type = t;
+      varName = vN;
+      varValue = vV;
     }
 
-    void setType(string str) {
-      //if or for
-      if (str == "statement") {
-        isStatement = true;
-        hasChildren = true;
-      } 
-      //var declaration
-      else if (str == "declaration") {
-        isDeclaration = true;
-      }
-      //expression 
-      else if (str == "expression") {
-        isExpression = true;
-        hasChildren = true;
-      }
-      //print statement
-      else if (str == "output") {
-        isOutput = true;
-      }
-      //shouldn't reach here
-      else {
-        throw invalid_argument("not a valid token type");
-      }
+    Token(string t) {
+      type = t;
+    }
+
+    void setType(string t) {
+      type = t;
+    }
+
+    void setVarInfo(string n, string v) {
+      varName = n;
+      varValue = v;
+    }
+
+    string getType() {
+      return type;
+    }
+
+    string getVarName() {
+      return varName;
+    }
+
+    string getVarValue() {
+      return varValue;
     }
 };
 
 vector<Variable> memory;
+vector<Token> tokens;
 
-vector<string> lex(vector<string> code) {
+void lex(vector<string> code) {
   for (string line : code) {
+
+    //if line is blank
+    if (line == "") continue;
+
     vector<string> words = getWordsFromString(line);
     
+    //variable declaration --> var nick = "nick"
     if (words.at(0) == "var") {
-      Token newTok = Token();
-      newTok.setType("declaration");
+      Token newTok("declaration", words.at(1), words.at(3));
+      tokens.push_back(newTok);
+    }
+
+    //variable expression --> nick = "nick"
+    if (words.at(1) == "=") {
+      Token newTok("expression", words.at(0), getSubVector(words, 2));
+      tokens.push_back(newTok);
     }
   }
-
-  return code;
 }
 
 int main() {
@@ -187,9 +205,9 @@ int main() {
 
   vector<string> code = splitString(total);
 
-  code = lex(code);
+  lex(code);
 
-  memory.at(0).toString();
+  cout << tokens.at(1).getVarValue() << endl;
 
   return 0;
 }
