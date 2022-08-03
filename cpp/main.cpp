@@ -50,34 +50,110 @@ bool searchArrayChar(char (&arr)[N], char target) {
   return false;
 }
 
-//use later for int and string differences
-bool checkNum(string str) {
-  char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-  for (char i : str) {
-    if (!searchArrayChar(digits, i)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 class Variable {
   private:
+
     string name;
     string value;
+    string type = "str";
+
   public:
+
     Variable(string n, string v) {
       name = n;
       value = v;
     }
+
+    Variable() {
+      name = "";
+      value = "";
+    }
+
     string getName() {
       return name;
     }
+
+    string getType() {
+      return type;
+    }
+
+    void setType(string n) {
+      type = n;
+    }
+
     string getValue() {
       return value;
     }
+
     void toString() {
       cout << "name: " << name << " value: " << value << endl;
+    }
+
+    bool checkNum() {
+      char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+      int numDot = 0;
+
+      for (char i : value) {
+        if (i == '.') {
+          numDot++;
+          continue;
+        }
+        if (!searchArrayChar(digits, i)) {
+          return false;
+        }
+      }
+
+      if (numDot > 1) {
+        return false;
+      }
+      return true;
+    }
+};
+
+class Token {
+  private:
+    Variable tokenVar;
+
+    bool hasChildren;
+    bool isStatement;
+    bool isExpression;
+    bool isDeclaration;
+    bool isOutput;
+
+    vector<Token*> children;
+  
+  public:
+    Token() {
+      hasChildren = false;
+      isStatement = false;
+      isExpression = false;
+      isDeclaration = false;
+      isOutput = false;
+    }
+
+    void setType(string str) {
+      //if or for
+      if (str == "statement") {
+        isStatement = true;
+        hasChildren = true;
+      } 
+      //var declaration
+      else if (str == "declaration") {
+        isDeclaration = true;
+      }
+      //expression 
+      else if (str == "expression") {
+        isExpression = true;
+        hasChildren = true;
+      }
+      //print statement
+      else if (str == "output") {
+        isOutput = true;
+      }
+      //shouldn't reach here
+      else {
+        throw invalid_argument("not a valid token type");
+      }
     }
 };
 
@@ -88,8 +164,8 @@ vector<string> lex(vector<string> code) {
     vector<string> words = getWordsFromString(line);
     
     if (words.at(0) == "var") {
-      Variable new_var(words.at(1), words.at(3));
-      memory.push_back(new_var);
+      Token newTok = Token();
+      newTok.setType("declaration");
     }
   }
 

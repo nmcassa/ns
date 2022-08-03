@@ -76,6 +76,7 @@ function lex(code){
 					{type: "Expression", assignment: 'statement', expression: get_subarray(broken, 3)}});
 		}
 
+		//for loop
 		if (broken[0] == "for") {
 			if (broken.length != 4 || broken[2] != "=>") {
 				throw new Error("Invalid for statement");
