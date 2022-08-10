@@ -1,6 +1,6 @@
 # ns
 
- This is an (in progress) interpreter, written in javascript and (in progress) cpp, for a high-level programming language called ns
+ This is an (in progress) interpreter, written in javascript, for a high-level programming language called ns
 
 ## ns syntax
 
@@ -23,5 +23,3 @@ print i
 ```
 
 This code runs the two lines underneath it four times.
-
-There is no support for defined functions or objects.

@@ -3,12 +3,42 @@
 #include <stdexcept> //errors
 #include <sstream>
 #include <vector>
-
-#include "methods.hpp"
-
 using namespace std;
 
-void vectorToString(vector<string> code);
+vector<string> splitString(string str) {
+  stringstream ss(str);
+  string to;
+  vector<string> code;
+
+  while (getline(ss, to, '\n')) {
+    code.push_back(to);
+  }
+
+  return code;
+}
+
+vector<string> getWordsFromString(string str) {
+  string word = "";
+  vector<string> ret;
+
+  for (char letter : str) {
+    if (letter == ' ') {
+      ret.push_back(word);
+      word = "";
+    } else {
+      word = word + letter;
+    }
+  }
+  ret.push_back(word);
+
+  return ret;
+}
+
+void vectorToString(vector<string> code) {
+  for (string item : code) {
+    cout << item << endl;
+  }
+}
 
 template <size_t N>
 bool searchArrayChar(char (&arr)[N], char target) {
@@ -20,23 +50,39 @@ bool searchArrayChar(char (&arr)[N], char target) {
   return false;
 }
 
+string getSubVector(vector<string> arr, int start, int end = -1) {
+  string ret = "";
+
+  if (end == -1) {
+    end = arr.size();
+  }
+
+  for (; start < end; start++) {
+    ret = ret + arr.at(start);
+  }
+
+  return ret;
+}
+
 void checkForKeyword(string str) {
   string keywords[4] = {"var", "for", "if", "print"};
 
   for (string key : keywords) {
     if (str == key) {
-      throw invalid_argument( "a variable cannot be a keyword" );
+      throw std::invalid_argument( "a variable cannot be a keyword" );
     }
   }
 }
 
 class Variable {
   private:
+
     string name;
     string value;
     string type = "str";
 
   public:
+
     Variable(string n, string v) {
       name = n;
       value = v;
@@ -147,6 +193,7 @@ vector<Token> tokens;
 
 void lex(vector<string> code) {
   for (string line : code) {
+
     //if line is blank
     if (line == "") continue;
 
@@ -197,10 +244,4 @@ int main() {
   cout << tokens.at(1).getVarValue() << endl;
 
   return 0;
-}
-
-void vectorToString(vector<string> code) {
-  for (string item : code) {
-    cout << item << endl;
-  }
 }
