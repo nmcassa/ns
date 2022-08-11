@@ -100,17 +100,31 @@ class Token {
       varValue = vV;
     }
 
+    //if statement
+    Token(string t, int l) {
+      type = t;
+      lines = l;
+    }
+
+    //output
     Token(string t, string vV) {
       type = t;
       varValue = vV;
     }
 
-    Token(string t) {
+    //for statement
+    Token(string t, int r, int l) {
       type = t;
+      repetitions = r;
+      lines = l;
     }
 
     void setType(string t) {
       type = t;
+    }
+
+    void setChildren(vector<Token*> c) {
+      children = c;
     }
 
     void setVarInfo(string n, string v) {
@@ -150,20 +164,28 @@ void lex(vector<string> code) {
     }
 
     //variable expression --> nick = "nick"
-    if (words.at(1) == "=") {
+    else if (words.at(1) == "=") {
       Token newTok("expression", words.at(0), getSubVector(words, 2));
       tokens.push_back(newTok);
     }
 
     //print
-    if (words.at(0) == "print") {
+    else if (words.at(0) == "print") {
       Token newTok("output", getSubVector(words, 1));
+      tokens.push_back(newTok);
     }
 
     //if statement
+    else if (words.at(0) == "if") {
+      Token newTok("if", stoi(words.at(1)));
+      tokens.push_back(newTok);
+    }
 
     //for loop
-
+    else if (words.at(0) == "for") {
+      Token newTok("for", stoi(words.at(1)), stoi(words.at(3)));
+      tokens.push_back(newTok);
+    }
   }
 }
 
@@ -184,7 +206,7 @@ int main() {
 
   lex(code);
 
-  cout << tokens.at(1).getVarValue() << endl;
+  cout << tokens.at(3).getType() << endl;
 
   return 0;
 }
